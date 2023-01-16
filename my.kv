@@ -1,0 +1,75 @@
+<DrawerClickableItem@MDNavigationDrawerItem>
+    white: '#ffffff'
+    text_color: self.white
+    selected_color: self.white
+
+<Tab>
+
+
+
+MDScreenManager:
+    MDScreen:
+        name: 's1'
+        MDNavigationLayout:
+            MDScreenManager:
+                MDScreen:
+                    MDBoxLayout:
+                        orientation: 'vertical'
+                        MDTopAppBar:
+                            title: "Navigation Drawer"
+                            elevation: 4
+                            pos_hint: {"top": 1}
+                            left_action_items: [["menu", lambda x: nav_drawer.set_state("open")]]
+                        MDTabs:
+                            Tab:
+                                title: "Tab 1"
+                                MDBoxLayout:
+                                    MDRaisedButton:
+                                        text: 't1'
+                                        on_press:
+                                            root.current = 's2'
+                            Tab:
+                                title: "Tab 2"
+
+            MDNavigationDrawer:
+                id: nav_drawer
+                radius: (0, 16, 16, 0)
+                MDNavigationDrawerMenu:
+                    MDNavigationDrawerHeader:
+                        title: "Header title"
+                        text: "Header text"
+                        spacing: "4dp"
+                        padding: "12dp", 0, 0, "56dp"
+                    MDNavigationDrawerLabel:
+                        text: "Mail"
+
+                    DrawerClickableItem:
+                        icon: "gmail"
+                        right_text: "+99"
+                        text: "Inbox"
+                        on_press:
+                            nav_drawer.set_state("close")
+                            root.current = 's2'
+                    DrawerClickableItem:
+                        icon: "send"
+                        text: "Outbox"
+                    MDNavigationDrawerDivider:
+                    MDNavigationDrawerLabel:
+                        text: "Labels"
+    MDScreen:
+        name: 's2'
+        MDBoxLayout:
+            orientation: 'vertical'
+            MDTextField:
+                hint_text: 'Model car'
+
+            MDBoxLayout:
+                MDRaisedButton:
+                    text: 'Button'
+
+            MDRaisedButton:
+                text: 'Ok'
+                pos_hint: {"center_x": .5, "center_y": .5}
+                on_press:
+                    root.current = 's1'
+
