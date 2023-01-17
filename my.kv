@@ -5,7 +5,12 @@
 
 <Tab>
 
-
+<NewPC@MDGridLayout>
+    MDTextField:
+        hint_text: 'Antifreezee? GUR? BF?'
+        disabled: not checkBox1.active
+    MDSwitch:
+        id: checkBox1
 
 MDScreenManager:
     MDScreen:
@@ -59,7 +64,9 @@ MDScreenManager:
     MDScreen:
         name: 's2'
         MDBoxLayout:
+            id: first_data
             orientation: 'vertical'
+            padding: '20dp'
             MDTextField:
                 required: True
                 hint_text: 'Model car'
@@ -67,17 +74,26 @@ MDScreenManager:
             MDTextField:
                 required: True
                 input_filter: 'int'
-                hint_text: 'Odometr'
+                hint_text: 'Current odometr'
 
-            MDBoxLayout:
-                padding: '20dp'
+            MDTextField:
+                required: True
+                input_filter: 'int'
+                hint_text: 'Last change oil (km)'
 
-                MDTextField:
-                    hint_text: 'test'
-                    disabled: not checkBox.active
+            MDTextField:
+                required: True
+                input_filter: 'int'
+                hint_text: 'Last change GRM (km)'
 
-                MDSwitch:
-                    id: checkBox
+            Widget:
+
+            MDRaisedButton:
+                text: 'Add new point'
+                pos_hint: {'center_x': .5, 'center_y': .5}
+
+
+            Widget:
 
             MDRaisedButton:
                 text: 'Ok'
