@@ -61,10 +61,23 @@ MDScreenManager:
         MDBoxLayout:
             orientation: 'vertical'
             MDTextField:
+                required: True
                 hint_text: 'Model car'
 
             MDTextField:
+                required: True
+                input_filter: 'int'
                 hint_text: 'Odometr'
+
+            MDBoxLayout:
+                padding: '20dp'
+
+                MDTextField:
+                    hint_text: 'test'
+                    disabled: not checkBox.active
+
+                MDSwitch:
+                    id: checkBox
 
             MDRaisedButton:
                 text: 'Ok'
