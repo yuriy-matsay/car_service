@@ -12,10 +12,7 @@ Window.size = 400, 700
 class Tab(MDFloatLayout, MDTabsBase):
     pass
 
-#class MyRoot(MDScreenManager):
-#    def fu(self, instance):
-#        print(instance.text)
-#    pass
+
 
 class MyApp(MDApp):
     def build(self):
