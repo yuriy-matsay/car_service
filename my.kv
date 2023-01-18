@@ -75,12 +75,14 @@ MDScreenManager:
                 id: set_d
                 cols: 2
                 MDTextField:
+                    name: 'odo'
                     id: odo
                     required: True
                     input_filter: 'int'
                     hint_text: 'Current odometr'
 
                 MDTextField:
+                    name: 'odo_d'
                     id: odo_d
                     required: True
                     hint_text: 'dd/mm/yyyy'
@@ -88,12 +90,14 @@ MDScreenManager:
                     date_format: "dd/mm/yyyy"
 
                 MDTextField:
+                    name: 'oil'
                     id: oil
                     required: True
                     input_filter: 'int'
                     hint_text: 'Last change oil (km)'
 
                 MDTextField:
+                    name: 'oil_d'
                     id: oil_d
                     required: True
                     hint_text: 'dd/mm/yyyy'
@@ -101,12 +105,14 @@ MDScreenManager:
                     date_format: "dd/mm/yyyy"
 
                 MDTextField:
+                    name: 'grm'
                     id: grm
                     required: True
                     input_filter: 'int'
                     hint_text: 'Last change GRM (km)'
 
                 MDTextField:
+                    name: 'grm_d'
                     id: grm_d
                     required: True
                     hint_text: 'dd/mm/yyyy'
@@ -127,5 +133,6 @@ MDScreenManager:
                 text: 'Ok'
                 pos_hint: {'center_x': .5, 'center_y': .5}
                 on_press:
-                    print(root.ids.set_d.children.)
+                    app.fu(root)
+                    #print(root.ids.set_d.children)
 

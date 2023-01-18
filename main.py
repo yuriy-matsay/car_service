@@ -20,9 +20,9 @@ class MyApp(MDApp):
         self.theme_cls.theme_style = "Dark"
         self.theme_cls.primary_palette = "BlueGray"
 
-    def fu(self, instance):
-        print(instance.text)
-        instance.text = '2345'
+    def fu(self, root):
+        for i in root.ids.set_d.children:
+            i.hint_text = str(f'{i.hint_text} 1')
 
     def on_save(self, instance, value, date_range):
         '''
