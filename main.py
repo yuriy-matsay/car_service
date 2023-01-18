@@ -4,7 +4,7 @@ from kivymd.uix.tab import MDTabsBase
 from kivy.core.window import Window
 from kivymd.uix.menu import MDDropdownMenu
 from kivymd.uix.screenmanager import MDScreenManager
-
+from kivymd.uix.pickers import MDDatePicker
 
 Window.size = 400, 700
 
@@ -23,6 +23,27 @@ class MyApp(MDApp):
     def fu(self, instance):
         print(instance.text)
         instance.text = '2345'
+
+    def on_save(self, instance, value, date_range):
+        '''
+        Events called when the "OK" dialog box button is clicked.
+
+        :type instance: <kivymd.uix.picker.MDDatePicker object>;
+        :param value: selected date;
+        :type value: <class 'datetime.date'>;
+        :param date_range: list of 'datetime.date' objects in the selected range;
+        :type date_range: <class 'list'>;
+        '''
+        print()
+        print(value)
+
+    def on_cancel(self, instance, value):
+        pass
+
+    def show_date_picker(self):
+        date_dialog = MDDatePicker()
+        date_dialog.bind(on_save=self.on_save, on_cancel=self.on_cancel)
+        date_dialog.open()
 
 
 
