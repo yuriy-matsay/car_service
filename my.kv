@@ -1,3 +1,4 @@
+#: import NoTransition kivy.uix.screenmanager.NoTransition
 <DrawerClickableItem@MDNavigationDrawerItem>
     white: '#ffffff'
     text_color: self.white
@@ -19,11 +20,15 @@
                             pos_hint: {'top': 1}
                             left_action_items: [['menu', lambda x: nav_drawer.set_state('open')]]
                         Widget:
-                        MDFloatingActionButton:
-                            pos_hint: {'center_x': .9}
-                            icon: "note-plus-outline"
-                            md_bg_color: app.theme_cls.primary_color
-                            on_press: root.current = 's3'
+                        #MDFloatingActionButton:
+                        #    pos_hint: {'center_x': .9}
+                        #    icon: "note-plus-outline"
+                        #    md_bg_color: app.theme_cls.primary_color
+                        #    on_press:
+                        #        root.transition = NoTransition()
+                        #        root.current = 's3'
+                        MDFloatingActionButtonSpeedDial:
+                            data: root.return_settings_data('add_button')
 
             MDNavigationDrawer:
                 id: nav_drawer
@@ -42,9 +47,14 @@
                         on_press:
                             nav_drawer.set_state('close')
                             root.current = 's2'
+                            root.transition = NoTransition()
                     DrawerClickableItem:
-                        icon: 'send'
-                        text: 'Outbox'
+                        icon: 'tag'
+                        text: 'Tags'
+                        on_press:
+                            nav_drawer.set_state('close')
+                            root.current = 's4'
+                            root.transition = NoTransition()
                     MDNavigationDrawerDivider:
                     MDNavigationDrawerLabel:
                         text: 'Labels'
@@ -67,8 +77,8 @@
                     root.set_settings_data({'car_name': root.ids.change_car_name_tf.text})
                     root.ids.top_bar.title = root.return_settings_data('car_name')
                 on_release:
+                    root.transition = NoTransition()
                     root.current = 's1'
-
     MDScreen:
         name: 's3'
         MDBoxLayout:
@@ -79,10 +89,36 @@
                 size_hint_y: .1
             MDTextField:
                 required: True
-                hint_text: 'TEST'
-
+                hint_text: 'Jobs'
+            MDTextField:
+                required: True
+                hint_text: 'dd/mm/yyyy'
+                validator: "date"
+                date_format: "dd/mm/yyyy"
+            MDTextField:
+                required: True
+                hint_text: 'Comments'
+                multiline: True
             Widget:
             MDFillRoundFlatButton:
                 pos_hint: {'center_x': .5}
                 text: 'Ok'
+                on_press:
+                    root.transition = NoTransition()
+                    root.current = 's1'
 
+    MDScreen:
+        name: 's4'
+        MDBoxLayout:
+            orientation: 'vertical'
+            padding: '10dp'
+            MDLabel:
+                size_hint_y: .1
+                text: 'Available tag'
+            Widget:
+            MDFillRoundFlatButton:
+                pos_hint: {'center_x': .5}
+                text: 'Ok'
+                on_press:
+                    root.transition = NoTransition()
+                    root.current = 's1'

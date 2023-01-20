@@ -5,12 +5,14 @@ from kivy.core.window import Window
 from kivymd.uix.menu import MDDropdownMenu
 from kivymd.uix.screenmanager import MDScreenManager
 from kivymd.uix.pickers import MDDatePicker
+from kivy.uix.screenmanager import FadeTransition
 import yaml
 
 Window.size = 400, 700
 
 
 class MyRoot(MDScreenManager):
+
     def return_settings_data(self, value):
         with open('settings.yaml', 'r') as s_d:
             data = yaml.safe_load(s_d)
