@@ -3,38 +3,27 @@
     text_color: self.white
     selected_color: self.white
 
-<Tab>
-
-<NewPC@MDGridLayout>
-    MDTextField:
-        hint_text: 'Antifreezee? GUR? BF?'
-        disabled: not checkBox1.active
-    MDSwitch:
-        id: checkBox1
-
-MDScreenManager:
+<MyRoot>:
     MDScreen:
         name: 's1'
         MDNavigationLayout:
             MDScreenManager:
                 MDScreen:
                     MDBoxLayout:
+                        padding: '5dp'
                         orientation: 'vertical'
                         MDTopAppBar:
-                            title: 'Navigation Drawer'
+                            id: top_bar
+                            title: root.return_settings_data('car_name')
                             elevation: 4
                             pos_hint: {'top': 1}
                             left_action_items: [['menu', lambda x: nav_drawer.set_state('open')]]
-                        MDTabs:
-                            Tab:
-                                title: 'Tab 1'
-                                MDBoxLayout:
-                                    MDRaisedButton:
-                                        text: 't1'
-                                        on_press:
-                                            root.current = 's2'
-                            Tab:
-                                title: 'Tab 2'
+                        Widget:
+                        MDFloatingActionButton:
+                            pos_hint: {'center_x': .9}
+                            icon: "note-plus-outline"
+                            md_bg_color: app.theme_cls.primary_color
+                            on_press: root.current = 's3'
 
             MDNavigationDrawer:
                 id: nav_drawer
@@ -45,13 +34,11 @@ MDScreenManager:
                         text: 'Header text'
                         spacing: '4dp'
                         padding: '12dp', 0, 0, '56dp'
-                    MDNavigationDrawerLabel:
-                        text: 'Mail'
-
+                    #MDNavigationDrawerLabel:
+                    #    text: 'Settings'
                     DrawerClickableItem:
-                        icon: 'gmail'
-                        right_text: '+99'
-                        text: 'Inbox'
+                        icon: 'cog'
+                        text: 'Settings'
                         on_press:
                             nav_drawer.set_state('close')
                             root.current = 's2'
@@ -61,70 +48,41 @@ MDScreenManager:
                     MDNavigationDrawerDivider:
                     MDNavigationDrawerLabel:
                         text: 'Labels'
+
     MDScreen:
         name: 's2'
         MDBoxLayout:
-            id: first_data
             orientation: 'vertical'
-            cols: 2
             padding: '20dp'
             MDTextField:
+                id: change_car_name_tf
                 required: True
-                hint_text: 'Model car'
-            MDGridLayout:
-                id: set_d
-                cols: 2
-                MDTextField:
-                    id: odo
-                    required: True
-                    input_filter: 'int'
-                    hint_text: 'Current odometr'
-
-                MDTextField:
-                    id: odo_d
-                    required: True
-                    hint_text: 'dd/mm/yyyy'
-                    validator: "date"
-                    date_format: "dd/mm/yyyy"
-
-                MDTextField:
-                    id: oil
-                    required: True
-                    input_filter: 'int'
-                    hint_text: 'Last change oil (km)'
-
-                MDTextField:
-                    id: oil_d
-                    required: True
-                    hint_text: 'dd/mm/yyyy'
-                    validator: "date"
-                    date_format: "dd/mm/yyyy"
-
-                MDTextField:
-                    id: grm
-                    required: True
-                    input_filter: 'int'
-                    hint_text: 'Last change GRM (km)'
-
-                MDTextField:
-                    id: grm_d
-                    required: True
-                    hint_text: 'dd/mm/yyyy'
-                    validator: "date"
-                    date_format: "dd/mm/yyyy"
-
-
+                hint_text: 'Name of car'
+                text: root.return_settings_data('car_name')
             Widget:
-
-            MDRaisedButton:
-                text: 'Add new point'
-                pos_hint: {'center_x': .5, 'center_y': .5}
-                on_release: app.show_date_picker()
-
-            Widget:
-
-            MDRaisedButton:
+            MDFillRoundFlatButton:
+                pos_hint: {'center_x': .5}
                 text: 'Ok'
-                pos_hint: {'center_x': .5, 'center_y': .5}
+                on_press:
+                    root.set_settings_data({'car_name': root.ids.change_car_name_tf.text})
+                    root.ids.top_bar.title = root.return_settings_data('car_name')
+                on_release:
+                    root.current = 's1'
 
+    MDScreen:
+        name: 's3'
+        MDBoxLayout:
+            orientation: 'vertical'
+            padding: '10dp'
+            MDLabel:
+                text: 'fill'
+                size_hint_y: .1
+            MDTextField:
+                required: True
+                hint_text: 'TEST'
+
+            Widget:
+            MDFillRoundFlatButton:
+                pos_hint: {'center_x': .5}
+                text: 'Ok'
 
