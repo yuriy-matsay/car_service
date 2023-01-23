@@ -4,6 +4,9 @@
     text_color: self.white
     selected_color: self.white
 
+<MyB>
+
+
 <MyRoot>:
     MDScreen:
         name: 's1'
@@ -27,8 +30,20 @@
                         #    on_press:
                         #        root.transition = NoTransition()
                         #        root.current = 's3'
-                        MDFloatingActionButtonSpeedDial:
-                            data: root.return_settings_data('add_button')
+                        MDBoxLayout:
+                            padding: '10dp'
+                            Widget:
+                            MDFillRoundFlatIconButton:
+                                text: 'GRM'
+                                icon: 'car-cog'
+                            MDFillRoundFlatIconButton:
+                                pos_hint_x: {'center_x': 'right'}
+                                text: 'TO'
+                                icon: 'oil'
+                            MDFillRoundFlatIconButton:
+                                text: 'Note'
+                                icon: 'note-plus-outline'
+                            Widget:
 
             MDNavigationDrawer:
                 id: nav_drawer
@@ -69,14 +84,34 @@
                 required: True
                 hint_text: 'Name of car'
                 text: root.return_settings_data('car_name')
+            MDLabel:
+                text: 'What will tracking'
+            MDBoxLayout:
+                id: mybox
+                orientation: 'vertical'
+                MDTextField:
+                    text: 'Oil'
+                    icon_left: 'oil'
+                    readonly: True
+                MDTextField:
+                    text: 'GRM'
+                    icon_left: 'car-cog'
+                    readonly: True
+            Widget:
+            MDFillRoundFlatButton:
+                pos_hint: {'center_x': .5}
+                text: 'Add new element'
+                on_release:
+                    root.add_tracking_element()
             Widget:
             MDFillRoundFlatButton:
                 pos_hint: {'center_x': .5}
                 text: 'Ok'
                 on_press:
-                    root.set_settings_data({'car_name': root.ids.change_car_name_tf.text})
+                    root.set_settings_data('car_name', root.ids.change_car_name_tf.text)
                     root.ids.top_bar.title = root.return_settings_data('car_name')
                 on_release:
+                    root.tye(root.ids.mybox.children)
                     root.transition = NoTransition()
                     root.current = 's1'
     MDScreen:
