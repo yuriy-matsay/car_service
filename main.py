@@ -55,8 +55,9 @@ class MyRoot(MDScreenManager):
         date_dialog.bind(on_save=self.on_save, on_cancel=self.on_cancel)
         date_dialog.open()
 
-    def ppp(self, *args):
+    def ppp(self, *args, **kwargs):
         print(args)
+        print(kwargs)
 
 
 class MyApp(MDApp, MyRoot):
