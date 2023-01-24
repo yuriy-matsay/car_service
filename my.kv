@@ -43,6 +43,8 @@
                             MDFillRoundFlatIconButton:
                                 text: 'Note'
                                 icon: 'note-plus-outline'
+                                on_press:
+                                    root.current = 's3'
                             Widget:
 
             MDNavigationDrawer:
@@ -63,6 +65,7 @@
                             nav_drawer.set_state('close')
                             root.current = 's2'
                             root.transition = NoTransition()
+                            root.mybox_build()
                     DrawerClickableItem:
                         icon: 'tag'
                         text: 'Tags'
@@ -86,23 +89,11 @@
                 text: root.return_settings_data('car_name')
             MDLabel:
                 text: 'What will tracking'
+                size_hint_y: .1
             MDBoxLayout:
                 id: mybox
                 orientation: 'vertical'
-                MDTextField:
-                    text: 'Oil'
-                    icon_left: 'oil'
-                    readonly: True
-                MDTextField:
-                    text: 'GRM'
-                    icon_left: 'car-cog'
-                    readonly: True
-            Widget:
-            MDFillRoundFlatButton:
-                pos_hint: {'center_x': .5}
-                text: 'Add new element'
-                on_release:
-                    root.add_tracking_element()
+                size_hint_y: .1
             Widget:
             MDFillRoundFlatButton:
                 pos_hint: {'center_x': .5}
@@ -111,7 +102,6 @@
                     root.set_settings_data('car_name', root.ids.change_car_name_tf.text)
                     root.ids.top_bar.title = root.return_settings_data('car_name')
                 on_release:
-                    root.tye(root.ids.mybox.children)
                     root.transition = NoTransition()
                     root.current = 's1'
     MDScreen:
@@ -123,17 +113,33 @@
                 text: 'fill'
                 size_hint_y: .1
             MDTextField:
+                id: job
                 required: True
                 hint_text: 'Jobs'
+
             MDTextField:
-                required: True
-                hint_text: 'dd/mm/yyyy'
-                validator: "date"
-                date_format: "dd/mm/yyyy"
-            MDTextField:
+                id: comment
                 required: True
                 hint_text: 'Comments'
                 multiline: True
+
+            MDTextField:
+                id: price
+                required: True
+                hint_text: 'price'
+                input_filter: 'int'
+
+            MDLabel:
+                id: mydate
+                text: 'date?'
+                size_hint_y: .15
+
+            MDFillRoundFlatButton:
+                pos_hint: {'center_x': .5}
+                text: 'Set date'
+                on_release:
+                    root.show_date_picker()
+
             Widget:
             MDFillRoundFlatButton:
                 pos_hint: {'center_x': .5}
@@ -141,6 +147,7 @@
                 on_press:
                     root.transition = NoTransition()
                     root.current = 's1'
+                    root.ppp(root.ids.job.text, root.ids.comment.text, root.ids.price.text, root.ids.mydate.text)
 
     MDScreen:
         name: 's4'
