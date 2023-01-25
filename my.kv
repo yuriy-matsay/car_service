@@ -36,15 +36,21 @@
                             MDFillRoundFlatIconButton:
                                 text: 'GRM'
                                 icon: 'car-cog'
+                                on_press:
+                                    root.current = 's3'
+                                    root.ids.tag_label.text = self.text
                             MDFillRoundFlatIconButton:
-                                pos_hint_x: {'center_x': 'right'}
                                 text: 'TO'
                                 icon: 'oil'
+                                on_press:
+                                    root.current = 's3'
+                                    root.ids.tag_label.text = self.text
                             MDFillRoundFlatIconButton:
                                 text: 'Note'
                                 icon: 'note-plus-outline'
                                 on_press:
                                     root.current = 's3'
+                                    root.ids.tag_label.text = self.text
                             Widget:
 
             MDNavigationDrawer:
@@ -110,45 +116,47 @@
             orientation: 'vertical'
             padding: '10dp'
             MDLabel:
-                text: 'fill'
+                id: tag_label
+                text: ''
                 size_hint_y: .1
             MDTextField:
                 id: job
                 required: True
                 hint_text: 'Jobs'
-
             MDTextField:
                 id: comment
                 required: True
                 hint_text: 'Comments'
                 multiline: True
-
             MDTextField:
                 id: price
                 required: True
                 hint_text: 'price'
                 input_filter: 'int'
-
             MDLabel:
                 id: mydate
-                text: 'date?'
+                text: ''
                 size_hint_y: .15
-
             MDFillRoundFlatButton:
                 pos_hint: {'center_x': .5}
                 text: 'Set date'
                 on_release:
                     root.show_date_picker()
-
             Widget:
-            MDFillRoundFlatButton:
-                pos_hint: {'center_x': .5}
-                text: 'Ok'
-                on_press:
-                    root.transition = NoTransition()
-                    root.current = 's1'
-                    root.ppp(root.ids.job.text, root.ids.comment.text, root.ids.price.text, root.ids.mydate.text, tag='other')
-
+            MDBoxLayout:
+                Widget:
+                MDFillRoundFlatButton:
+                    text: 'Cancel'
+                    on_press:
+                        root.transition = NoTransition()
+                        root.current = 's1'
+                MDFillRoundFlatButton:
+                    pos_hint: {'center_x': .5}
+                    text: 'Ok'
+                    on_press:
+                        root.transition = NoTransition()
+                        root.ppp(root.ids.job.text, root.ids.comment.text, root.ids.price.text, root.ids.mydate.text, tag='other')
+                Widget:
 
     MDScreen:
         name: 's4'

@@ -56,8 +56,12 @@ class MyRoot(MDScreenManager):
         date_dialog.open()
 
     def ppp(self, *args, **kwargs):
-        print(args)
-        print(kwargs)
+        if '' in args:
+            pass
+        else:
+            self.current = 's1'
+            print(args)
+            print(kwargs)
 
 
 class MyApp(MDApp, MyRoot):
