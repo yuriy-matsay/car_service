@@ -9,6 +9,7 @@ from kivy.uix.screenmanager import FadeTransition
 from kivymd.uix.button import MDFillRoundFlatButton
 from kivymd.uix.textfield import MDTextField
 from kivymd.uix.label import MDLabel
+import sqlite3
 import json
 
 Window.size = 400, 700
@@ -16,6 +17,8 @@ Window.size = 400, 700
 with open('settings.json', 'r') as s_d:
     data = json.load(s_d)
 
+with sqlite3.connect('mydb.db') as db:
+    sql = db.cursor()
 
 class MyRoot(MDScreenManager):
 
@@ -55,13 +58,17 @@ class MyRoot(MDScreenManager):
         date_dialog.bind(on_save=self.on_save, on_cancel=self.on_cancel)
         date_dialog.open()
 
-    def ppp(self, *args, **kwargs):
+    def ppp(self, *args):
         if '' in args:
             pass
         else:
+            self.ids.job.text = self.ids.comment.text = self.ids.price.text = self.ids.odometr.text = self.ids.mydate.text = self.ids.tag_label.text = ''
+            sql.execute('INSERT INTO myTable VALUES(?, ?, ?, ?, ?, ?)', args)
+            db.commit()
+            x = sql.execute('SELECT * FROM myTable WHERE rowid == 3').fetchall()
+            print(x)
             self.current = 's1'
-            print(args)
-            print(kwargs)
+
 
 
 class MyApp(MDApp, MyRoot):

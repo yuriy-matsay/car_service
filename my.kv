@@ -131,7 +131,12 @@
             MDTextField:
                 id: price
                 required: True
-                hint_text: 'price'
+                hint_text: 'Price'
+                input_filter: 'int'
+            MDTextField:
+                id: odometr
+                required: True
+                hint_text: 'Odometr'
                 input_filter: 'int'
             MDLabel:
                 id: mydate
@@ -155,7 +160,8 @@
                     text: 'Ok'
                     on_press:
                         root.transition = NoTransition()
-                        root.ppp(root.ids.job.text, root.ids.comment.text, root.ids.price.text, root.ids.mydate.text, tag='other')
+                        root.ppp(root.ids.job.text, root.ids.comment.text, root.ids.price.text, root.ids.odometr.text, root.ids.mydate.text, root.ids.tag_label.text)
+
                 Widget:
 
     MDScreen:
