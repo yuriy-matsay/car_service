@@ -21,6 +21,7 @@ with open('settings.json', 'r') as s_d:
 with sqlite3.connect('mydb.db') as db:
     sql = db.cursor()
 
+
 class MyRoot(MDScreenManager):
 
     def return_settings_data(self, value):
@@ -78,10 +79,16 @@ class MyRoot(MDScreenManager):
     def start(self):
         x = sql.execute('SELECT * FROM myTable ORDER BY date').fetchall()
         for i in range(len(x)):
-            self.ids.container.add_widget(ThreeLineListItem(
-                text=f'{x[i][4]}',
-                secondary_text=f'{x[i][0]}',
-                tertiary_text=f'{x[i][3]}'))
+            self.ids.container.add_widget(ThreeLineListItem(text=f'{x[i][4]}',
+                                                            secondary_text=f'{x[i][0]}',
+                                                            tertiary_text=f'{x[i][3]}',
+                                                            on_release=lambda _: self.yyy()
+                                                            ))
+
+    def yyy(self):
+        print('weq')
+
+    start(self=)
 
 
 class MyApp(MDApp, MyRoot):

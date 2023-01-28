@@ -22,15 +22,12 @@
                             elevation: 4
                             pos_hint: {'top': 1}
                             left_action_items: [['menu', lambda x: nav_drawer.set_state('open')]]
-                        #Widget:
                         MDScrollView:
                             MDList:
                                 id: container
-
-
-
                         MDBoxLayout:
                             padding: '10dp'
+                            size_hint_y: .1
                             Widget:
                             MDFillRoundFlatIconButton:
                                 text: 'GRM'
