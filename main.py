@@ -9,6 +9,7 @@ from kivy.uix.screenmanager import FadeTransition
 from kivymd.uix.button import MDFillRoundFlatButton
 from kivymd.uix.textfield import MDTextField
 from kivymd.uix.label import MDLabel
+from kivymd.uix.list import ThreeLineListItem
 import sqlite3
 import json
 
@@ -65,10 +66,22 @@ class MyRoot(MDScreenManager):
             self.ids.job.text = self.ids.comment.text = self.ids.price.text = self.ids.odometr.text = self.ids.mydate.text = self.ids.tag_label.text = ''
             sql.execute('INSERT INTO myTable VALUES(?, ?, ?, ?, ?, ?)', args)
             db.commit()
-            x = sql.execute('SELECT * FROM myTable WHERE rowid == 3').fetchall()
+            x = sql.execute('SELECT * FROM myTable').fetchall()
             print(x)
             self.current = 's1'
 
+    def remove_mylist(self):
+        while self.ids.container.children:
+            for i in self.ids.container.children:
+                self.ids.container.remove_widget(i)
+
+    def start(self):
+        x = sql.execute('SELECT * FROM myTable ORDER BY date').fetchall()
+        for i in range(len(x)):
+            self.ids.container.add_widget(ThreeLineListItem(
+                text=f'{x[i][4]}',
+                secondary_text=f'{x[i][0]}',
+                tertiary_text=f'{x[i][3]}'))
 
 
 class MyApp(MDApp, MyRoot):

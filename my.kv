@@ -22,14 +22,13 @@
                             elevation: 4
                             pos_hint: {'top': 1}
                             left_action_items: [['menu', lambda x: nav_drawer.set_state('open')]]
-                        Widget:
-                        #MDFloatingActionButton:
-                        #    pos_hint: {'center_x': .9}
-                        #    icon: "note-plus-outline"
-                        #    md_bg_color: app.theme_cls.primary_color
-                        #    on_press:
-                        #        root.transition = NoTransition()
-                        #        root.current = 's3'
+                        #Widget:
+                        MDScrollView:
+                            MDList:
+                                id: container
+
+
+
                         MDBoxLayout:
                             padding: '10dp'
                             Widget:
@@ -37,8 +36,9 @@
                                 text: 'GRM'
                                 icon: 'car-cog'
                                 on_press:
-                                    root.current = 's3'
-                                    root.ids.tag_label.text = self.text
+                                    root.start()
+                                    #root.current = 's3'
+                                    #root.ids.tag_label.text = self.text
                             MDFillRoundFlatIconButton:
                                 text: 'TO'
                                 icon: 'oil'
