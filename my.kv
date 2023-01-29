@@ -4,7 +4,7 @@
     text_color: self.white
     selected_color: self.white
 
-<MyB>
+<Tab>
 
 
 <MyRoot>:
@@ -22,9 +22,18 @@
                             elevation: 4
                             pos_hint: {'top': 1}
                             left_action_items: [['menu', lambda x: nav_drawer.set_state('open')]]
-                        MDScrollView:
-                            MDList:
-                                id: container
+                        MDTabs:
+                            indicator_color: 'white'
+                            Tab:
+                                title: 'Tab1'
+                                MDBoxLayout:
+                                    MDLabel:
+                                        text: 'Label'
+                            Tab:
+                                title: 'Tab2'
+                                MDScrollView:
+                                    MDList:
+                                        id: container
                         MDBoxLayout:
                             padding: '10dp'
                             size_hint_y: .1

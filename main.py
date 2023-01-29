@@ -10,6 +10,8 @@ from kivymd.uix.button import MDFillRoundFlatButton
 from kivymd.uix.textfield import MDTextField
 from kivymd.uix.label import MDLabel
 from kivymd.uix.list import ThreeLineListItem
+from kivymd.uix.floatlayout import MDFloatLayout
+from kivymd.uix.tab import MDTabsBase
 import sqlite3
 import json
 
@@ -21,6 +23,9 @@ with open('settings.json', 'r') as s_d:
 with sqlite3.connect('mydb.db') as db:
     sql = db.cursor()
 
+
+class Tab(MDFloatLayout, MDTabsBase):
+    pass
 
 class MyRoot(MDScreenManager):
 
@@ -84,11 +89,10 @@ class MyRoot(MDScreenManager):
                                                             tertiary_text=f'{x[i][3]}',
                                                             on_release=lambda _: self.yyy()
                                                             ))
-
     def yyy(self):
         print('weq')
 
-    start(self=)
+
 
 
 class MyApp(MDApp, MyRoot):
@@ -99,7 +103,7 @@ class MyApp(MDApp, MyRoot):
         return MyRoot()
 
     def on_start(self):
-        pass
+        self.root.start()
 
     def on_stop(self):
         with open('settings.json', 'w') as f:
