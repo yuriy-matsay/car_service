@@ -1,3 +1,4 @@
+#: import NoTransition kivy.uix.screenmanager.NoTransition
 <DrawerClickableItem@MDNavigationDrawerItem>
     white: '#ffffff'
     text_color: self.white
@@ -5,36 +6,80 @@
 
 <Tab>
 
-<NewPC@MDGridLayout>
-    MDTextField:
-        hint_text: 'Antifreezee? GUR? BF?'
-        disabled: not checkBox1.active
-    MDSwitch:
-        id: checkBox1
-
-MDScreenManager:
+<MyRoot>:
     MDScreen:
         name: 's1'
         MDNavigationLayout:
             MDScreenManager:
                 MDScreen:
                     MDBoxLayout:
+                        padding: '5dp'
                         orientation: 'vertical'
                         MDTopAppBar:
-                            title: 'Navigation Drawer'
+                            id: top_bar
+                            title: root.return_settings_data('car_name')
                             elevation: 4
                             pos_hint: {'top': 1}
                             left_action_items: [['menu', lambda x: nav_drawer.set_state('open')]]
                         MDTabs:
+                            indicator_color: 'white'
+                            on_tab_switch: root.update_list()
                             Tab:
-                                title: 'Tab 1'
+                                title: 'Tab1'
                                 MDBoxLayout:
-                                    MDRaisedButton:
-                                        text: 't1'
+                                    orientation: 'vertical'
+                                    padding: '10dp'
+                                    MDTextField:
+                                        id: set_odometr
+                                        required: True
+                                        hint_text: 'set odometr'
+                                        input_filter: 'int'
+                                        text: str(root.return_settings_data('current_odometr'))
+                                    MDFillRoundFlatIconButton:
+                                        text: 'Refresh'
+                                        pos_hint: {'center_x': .5}
                                         on_press:
-                                            root.current = 's2'
+                                            root.set_settings_data('current_odometr', int(root.ids.set_odometr.text))
+                                    MDLabel:
+                                        text: 'Last change'
+                                        size_hint_y: .1
+                                    MDBoxLayout:
+                                        #id: from_last_change_box
+                                        orientation: 'vertical'
+                                        size_hint_y: .1
+                                        MDLabel:
+                                            text: ''
+                                        MDLabel:
+
+                                    Widget:
                             Tab:
-                                title: 'Tab 2'
+                                title: 'Tab2'
+                                MDScrollView:
+                                    MDList:
+                                        id: container
+                        MDBoxLayout:
+                            padding: '10dp'
+                            size_hint_y: .1
+                            Widget:
+                            MDFillRoundFlatIconButton:
+                                text: 'GRM'
+                                icon: 'car-cog'
+                                on_press:
+                                    root.current = 's3'
+                                    root.ids.tag_label.text = self.text
+                            MDFillRoundFlatIconButton:
+                                text: 'TO'
+                                icon: 'oil'
+                                on_press:
+                                    root.current = 's3'
+                                    root.ids.tag_label.text = self.text
+                            MDFillRoundFlatIconButton:
+                                text: 'Note'
+                                icon: 'note-plus-outline'
+                                on_press:
+                                    root.current = 's3'
+                                    root.ids.tag_label.text = self.text
+                            Widget:
 
             MDNavigationDrawer:
                 id: nav_drawer
@@ -45,94 +90,121 @@ MDScreenManager:
                         text: 'Header text'
                         spacing: '4dp'
                         padding: '12dp', 0, 0, '56dp'
-                    MDNavigationDrawerLabel:
-                        text: 'Mail'
-
+                    #MDNavigationDrawerLabel:
+                    #    text: 'Settings'
                     DrawerClickableItem:
-                        icon: 'gmail'
-                        right_text: '+99'
-                        text: 'Inbox'
+                        icon: 'cog'
+                        text: 'Settings'
                         on_press:
                             nav_drawer.set_state('close')
                             root.current = 's2'
+                            root.transition = NoTransition()
+                            root.mybox_build()
                     DrawerClickableItem:
-                        icon: 'send'
-                        text: 'Outbox'
+                        icon: 'tag'
+                        text: 'Tags'
+                        on_press:
+                            nav_drawer.set_state('close')
+                            root.current = 's4'
+                            root.transition = NoTransition()
                     MDNavigationDrawerDivider:
                     MDNavigationDrawerLabel:
                         text: 'Labels'
+
     MDScreen:
         name: 's2'
         MDBoxLayout:
-            id: first_data
             orientation: 'vertical'
-            cols: 2
             padding: '20dp'
             MDTextField:
+                id: change_car_name_tf
                 required: True
-                hint_text: 'Model car'
-            MDGridLayout:
-                id: set_d
-                cols: 2
-                MDTextField:
-                    name: 'odo'
-                    id: odo
-                    required: True
-                    input_filter: 'int'
-                    hint_text: 'Current odometr'
-
-                MDTextField:
-                    name: 'odo_d'
-                    id: odo_d
-                    required: True
-                    hint_text: 'dd/mm/yyyy'
-                    validator: "date"
-                    date_format: "dd/mm/yyyy"
-
-                MDTextField:
-                    name: 'oil'
-                    id: oil
-                    required: True
-                    input_filter: 'int'
-                    hint_text: 'Last change oil (km)'
-
-                MDTextField:
-                    name: 'oil_d'
-                    id: oil_d
-                    required: True
-                    hint_text: 'dd/mm/yyyy'
-                    validator: "date"
-                    date_format: "dd/mm/yyyy"
-
-                MDTextField:
-                    name: 'grm'
-                    id: grm
-                    required: True
-                    input_filter: 'int'
-                    hint_text: 'Last change GRM (km)'
-
-                MDTextField:
-                    name: 'grm_d'
-                    id: grm_d
-                    required: True
-                    hint_text: 'dd/mm/yyyy'
-                    validator: "date"
-                    date_format: "dd/mm/yyyy"
-
-
+                hint_text: 'Name of car'
+                text: root.return_settings_data('car_name')
+            MDLabel:
+                text: 'What will tracking'
+                size_hint_y: .1
+            MDBoxLayout:
+                id: mybox
+                orientation: 'vertical'
+                size_hint_y: .1
             Widget:
-
-            MDRaisedButton:
-                text: 'Add new point'
-                pos_hint: {'center_x': .5, 'center_y': .5}
-                on_release: app.show_date_picker()
-
-            Widget:
-
-            MDRaisedButton:
+            MDFillRoundFlatButton:
+                pos_hint: {'center_x': .5}
                 text: 'Ok'
-                pos_hint: {'center_x': .5, 'center_y': .5}
                 on_press:
-                    app.fu(root)
-                    #print(root.ids.set_d.children)
-
+                    root.set_settings_data('car_name', root.ids.change_car_name_tf.text)
+                    root.ids.top_bar.title = root.return_settings_data('car_name')
+                on_release:
+                    root.transition = NoTransition()
+                    root.current = 's1'
+    MDScreen:
+        name: 's3'
+        MDBoxLayout:
+            orientation: 'vertical'
+            padding: '10dp'
+            MDLabel:
+                id: tag_label
+                text: ''
+                size_hint_y: .1
+            MDTextField:
+                id: job
+                required: True
+                hint_text: 'Jobs'
+            MDTextField:
+                id: comment
+                required: True
+                hint_text: 'Comments'
+                multiline: True
+            MDTextField:
+                id: price
+                required: True
+                hint_text: 'Price'
+                input_filter: 'int'
+            MDTextField:
+                id: odometr
+                required: True
+                hint_text: 'Odometr'
+                input_filter: 'int'
+            MDLabel:
+                id: mydate
+                text: ''
+                size_hint_y: .15
+            MDFillRoundFlatButton:
+                pos_hint: {'center_x': .5}
+                text: 'Set date'
+                on_release:
+                    root.show_date_picker()
+            Widget:
+            MDBoxLayout:
+                Widget:
+                MDFillRoundFlatButton:
+                    text: 'Cancel'
+                    on_press:
+                        root.transition = NoTransition()
+                        root.current = 's1'
+                MDFillRoundFlatButton:
+                    pos_hint: {'center_x': .5}
+                    text: 'Ok'
+                    on_press:
+                        root.set_settings_data(root.ids.tag_label.text, int(root.ids.odometr.text))
+                        root.transition = NoTransition()
+                        root.save_to_bd(root.ids.job.text, root.ids.comment.text, root.ids.price.text, root.ids.odometr.text, root.ids.mydate.text, root.ids.tag_label.text)
+                        root.update_list()
+                Widget:
+##
+    MDScreen:
+        name: 's4'
+        MDBoxLayout:
+            orientation: 'vertical'
+            padding: '10dp'
+            MDLabel:
+                size_hint_y: .1
+                text: 'Available tag'
+            Widget:
+            MDFillRoundFlatButton:
+                pos_hint: {'center_x': .5}
+                text: 'Ok'
+                on_press:
+                    root.transition = NoTransition()
+                    root.current = 's1'
