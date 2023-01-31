@@ -65,7 +65,7 @@ class MyRoot(MDScreenManager):
         value = str(value)
         val: str = value.replace('-', '/')
         self.ids.mydate.text = val
-##
+
     def on_cancel(self, instance, value):
         """Events called when the "CANCEL" dialog box button is clicked."""
         pass
