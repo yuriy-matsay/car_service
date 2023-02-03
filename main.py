@@ -42,7 +42,6 @@ class MyRoot(MDScreenManager):
         data[key] = value
 
     def calc_func(self, val):
-
         return
 
     def add_tracking_element(self):
@@ -82,12 +81,12 @@ class MyRoot(MDScreenManager):
             self.ids.job.text = self.ids.comment.text = self.ids.price.text = self.ids.odometr.text = self.ids.mydate.text = self.ids.tag_label.text = ''
             sql.execute('INSERT INTO myTable VALUES(?, ?, ?, ?, ?, ?)', args)
             db.commit()
-            x = sql.execute('SELECT * FROM myTable').fetchall()
-            self.current = 's1'
+            self.current = 'main_screen'
 
     def update_list(self):
         self.ids.container.clear_widgets()
-        x = sql.execute('SELECT * FROM myTable ORDER BY date').fetchall()
+        x: list = sql.execute('SELECT * FROM myTable ORDER BY date').fetchall()
+        x.reverse()
         for i in range(len(x)):
             self.ids.container.add_widget(ThreeLineListItem(text=f'{x[i][4]}',
                                                             secondary_text=f'{x[i][0]}',
@@ -97,6 +96,7 @@ class MyRoot(MDScreenManager):
 
     def yyy(self):
         print('gg')
+        #x = sql.execute('SELECT * FROM myTable').fetchall()
 
 
 class MyApp(MDApp, MyRoot):

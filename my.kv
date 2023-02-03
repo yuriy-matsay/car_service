@@ -8,7 +8,7 @@
 
 <MyRoot>:
     MDScreen:
-        name: 's1'
+        name: 'main_screen'
         MDNavigationLayout:
             MDScreenManager:
                 MDScreen:
@@ -65,19 +65,19 @@
                                 text: 'GRM'
                                 icon: 'car-cog'
                                 on_press:
-                                    root.current = 's3'
+                                    root.current = 'add_item_screen'
                                     root.ids.tag_label.text = self.text
                             MDFillRoundFlatIconButton:
                                 text: 'TO'
                                 icon: 'oil'
                                 on_press:
-                                    root.current = 's3'
+                                    root.current = 'add_item_screen'
                                     root.ids.tag_label.text = self.text
                             MDFillRoundFlatIconButton:
                                 text: 'Note'
                                 icon: 'note-plus-outline'
                                 on_press:
-                                    root.current = 's3'
+                                    root.current = 'add_item_screen'
                                     root.ids.tag_label.text = self.text
                             Widget:
 
@@ -97,7 +97,7 @@
                         text: 'Settings'
                         on_press:
                             nav_drawer.set_state('close')
-                            root.current = 's2'
+                            root.current = 'settings_screen'
                             root.transition = NoTransition()
                             root.mybox_build()
                     DrawerClickableItem:
@@ -105,14 +105,14 @@
                         text: 'Tags'
                         on_press:
                             nav_drawer.set_state('close')
-                            root.current = 's4'
+                            root.current = 'tag_screen'
                             root.transition = NoTransition()
                     MDNavigationDrawerDivider:
                     MDNavigationDrawerLabel:
                         text: 'Labels'
 
     MDScreen:
-        name: 's2'
+        name: 'settings_screen'
         MDBoxLayout:
             orientation: 'vertical'
             padding: '20dp'
@@ -137,9 +137,9 @@
                     root.ids.top_bar.title = root.return_settings_data('car_name')
                 on_release:
                     root.transition = NoTransition()
-                    root.current = 's1'
+                    root.current = 'main_screen'
     MDScreen:
-        name: 's3'
+        name: 'add_item_screen'
         MDBoxLayout:
             orientation: 'vertical'
             padding: '10dp'
@@ -182,7 +182,7 @@
                     text: 'Cancel'
                     on_press:
                         root.transition = NoTransition()
-                        root.current = 's1'
+                        root.current = 'main_screen'
                 MDFillRoundFlatButton:
                     pos_hint: {'center_x': .5}
                     text: 'Ok'
@@ -194,7 +194,7 @@
                 Widget:
 
     MDScreen:
-        name: 's4'
+        name: 'tag_screen'
         MDBoxLayout:
             orientation: 'vertical'
             padding: '10dp'
@@ -207,4 +207,4 @@
                 text: 'Ok'
                 on_press:
                     root.transition = NoTransition()
-                    root.current = 's1'
+                    root.current = 'main_screen'
