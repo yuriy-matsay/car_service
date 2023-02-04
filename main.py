@@ -11,9 +11,10 @@ from kivymd.uix.button import MDFlatButton
 from kivymd.uix.dialog import MDDialog
 from kivymd.uix.textfield import MDTextField
 from kivymd.uix.label import MDLabel
-from kivymd.uix.list import ThreeLineListItem
+from kivymd.uix.list import ThreeLineRightIconListItem, IconRightWidget
 from kivymd.uix.floatlayout import MDFloatLayout
 from kivymd.uix.boxlayout import MDBoxLayout
+from kivy.properties import StringProperty
 from kivymd.uix.tab import MDTabsBase
 import sqlite3
 import json
@@ -30,7 +31,14 @@ with sqlite3.connect('mydb.db') as db:
 class Tab(MDFloatLayout, MDTabsBase):
     pass
 
-
+class CustomThreeLineRightIconListItem(ThreeLineRightIconListItem):
+    row_id = StringProperty()
+    tag_icon = StringProperty()
+    comment = StringProperty()
+    price = StringProperty()
+    odometr = StringProperty()
+    date = StringProperty()
+    tag = StringProperty()
 class MyRoot(MDScreenManager):
 
     @staticmethod
@@ -78,25 +86,37 @@ class MyRoot(MDScreenManager):
         if '' in args:
             pass
         else:
-            self.ids.job.text = self.ids.comment.text = self.ids.price.text = self.ids.odometr.text = self.ids.mydate.text = self.ids.tag_label.text = ''
+            self.ids.tag_icon.icon = self.ids.comment.text = self.ids.price.text = self.ids.odometr.text = self.ids.mydate.text = self.ids.tag_label.text = ''
             sql.execute('INSERT INTO myTable VALUES(?, ?, ?, ?, ?, ?)', args)
             db.commit()
             self.current = 'main_screen'
 
     def update_list(self):
         self.ids.container.clear_widgets()
-        x: list = sql.execute('SELECT * FROM myTable ORDER BY date').fetchall()
-        x.reverse()
-        for i in range(len(x)):
-            self.ids.container.add_widget(ThreeLineListItem(text=f'{x[i][4]}',
-                                                            secondary_text=f'{x[i][0]}',
-                                                            tertiary_text=f'{x[i][3]}',
-                                                            on_release=lambda _: self.yyy()
-                                                            ))
+        db_record: list = sql.execute('SELECT rowid, * FROM myTable ORDER BY date DESC').fetchall()
+        for i in range(len(db_record)):
+            list_item = CustomThreeLineRightIconListItem(
+                    text=f'{db_record[i][5]}',
+                    secondary_text=f'{db_record[i][2]}',
+                    tertiary_text=f'{db_record[i][4]}',
+                    row_id=f'{db_record[i][0]}',
+                    tag_icon=f'{db_record[i][1]}',
+                    comment=f'{db_record[i][2]}',
+                    price=f'{db_record[i][3]}',
+                    odometr=f'{db_record[i][4]}',
+                    date=f'{db_record[i][5]}',
+                    tag=f'{db_record[i][6]}',
+                    )
+            list_item.add_widget(IconRightWidget(icon=db_record[i][1]))
+            self.ids.container.add_widget(list_item)
 
-    def yyy(self):
-        print('gg')
-        #x = sql.execute('SELECT * FROM myTable').fetchall()
+    def change_or_delete_item(self, instance):
+        self.ids.tag_icon.icon = instance.tag_icon
+        self.ids.tag_label.text = instance.tag
+        self.ids.comment.text = instance.comment
+        self.ids.price.text = instance.price
+        self.ids.odometr.text = instance.odometr
+        self.ids.mydate.text = instance.date
 
 
 class MyApp(MDApp, MyRoot):

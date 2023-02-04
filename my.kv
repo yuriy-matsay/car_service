@@ -1,10 +1,23 @@
 #: import NoTransition kivy.uix.screenmanager.NoTransition
+
 <DrawerClickableItem@MDNavigationDrawerItem>
     white: '#ffffff'
     text_color: self.white
     selected_color: self.white
 
 <Tab>
+
+<CustomThreeLineRightIconListItem>
+    row_id: ''
+    tag_icon: ''
+    comment: ''
+    price: ''
+    odometr: ''
+    date: ''
+    tag: ''
+    on_press:
+        app.root.change_or_delete_item(self)
+        app.root.current = 'add_item_screen'
 
 <MyRoot>:
     MDScreen:
@@ -57,6 +70,7 @@
                                 MDScrollView:
                                     MDList:
                                         id: container
+
                         MDBoxLayout:
                             padding: '10dp'
                             size_hint_y: .1
@@ -66,19 +80,23 @@
                                 icon: 'car-cog'
                                 on_press:
                                     root.current = 'add_item_screen'
+                                    root.ids.tag_icon.icon = 'car-cog'
                                     root.ids.tag_label.text = self.text
                             MDFillRoundFlatIconButton:
                                 text: 'TO'
                                 icon: 'oil'
                                 on_press:
                                     root.current = 'add_item_screen'
+                                    root.ids.tag_icon.icon = 'oil'
                                     root.ids.tag_label.text = self.text
                             MDFillRoundFlatIconButton:
                                 text: 'Note'
                                 icon: 'note-plus-outline'
                                 on_press:
                                     root.current = 'add_item_screen'
+                                    root.ids.tag_icon.icon = 'note-text-outline'
                                     root.ids.tag_label.text = self.text
+
                             Widget:
 
             MDNavigationDrawer:
@@ -143,14 +161,12 @@
         MDBoxLayout:
             orientation: 'vertical'
             padding: '10dp'
+            MDIcon:
+                id: tag_icon
             MDLabel:
                 id: tag_label
                 text: ''
                 size_hint_y: .1
-            MDTextField:
-                id: job
-                required: True
-                hint_text: 'Jobs'
             MDTextField:
                 id: comment
                 required: True
@@ -189,7 +205,7 @@
                     on_press:
                         root.set_settings_data(root.ids.tag_label.text, int(root.ids.odometr.text))
                         root.transition = NoTransition()
-                        root.save_to_bd(root.ids.job.text, root.ids.comment.text, root.ids.price.text, root.ids.odometr.text, root.ids.mydate.text, root.ids.tag_label.text)
+                        root.save_to_bd(root.ids.tag_icon.icon, root.ids.comment.text, root.ids.price.text, root.ids.odometr.text, root.ids.mydate.text, root.ids.tag_label.text)
                         root.update_list()
                 Widget:
 
