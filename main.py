@@ -110,13 +110,15 @@ class MyRoot(MDScreenManager):
             list_item.add_widget(IconRightWidget(icon=db_record[i][1]))
             self.ids.container.add_widget(list_item)
 
-    def change_or_delete_item(self, instance):
-        self.ids.tag_icon.icon = instance.tag_icon
-        self.ids.tag_label.text = instance.tag
-        self.ids.comment.text = instance.comment
-        self.ids.price.text = instance.price
-        self.ids.odometr.text = instance.odometr
-        self.ids.mydate.text = instance.date
+    def show_item(self, instance):
+        self.ids.for_del_sc_icon.icon = instance.tag_icon
+        self.ids.for_del_sc_tag_label.text = instance.tag
+        self.ids.for_del_sc_tag_label.rowid = instance.row_id
+        self.ids.for_del_sc_text.text = f'{instance.date}\n{instance.comment}\n{instance.odometr} km\n{instance.price} UAH\n'
+
+    def delete_item(self, rowid):
+        sql.execute('DELETE FROM myTable WHERE rowid == ?', rowid)
+        db.commit()
 
 
 class MyApp(MDApp, MyRoot):

@@ -7,6 +7,10 @@
 
 <Tab>
 
+<VerticalBoxLayout@MDBoxLayout>
+    orientation: 'vertical'
+    padding: '10dp'
+
 <CustomThreeLineRightIconListItem>
     row_id: ''
     tag_icon: ''
@@ -16,8 +20,8 @@
     date: ''
     tag: ''
     on_press:
-        app.root.change_or_delete_item(self)
-        app.root.current = 'add_item_screen'
+        app.root.show_item(self)
+        app.root.current = 'delete_item_screen'
 
 <MyRoot>:
     MDScreen:
@@ -25,9 +29,7 @@
         MDNavigationLayout:
             MDScreenManager:
                 MDScreen:
-                    MDBoxLayout:
-                        padding: '5dp'
-                        orientation: 'vertical'
+                    VerticalBoxLayout:
                         MDTopAppBar:
                             id: top_bar
                             title: root.return_settings_data('car_name')
@@ -39,9 +41,7 @@
                             on_tab_switch: root.update_list()
                             Tab:
                                 title: 'Tab1'
-                                MDBoxLayout:
-                                    orientation: 'vertical'
-                                    padding: '10dp'
+                                VerticalBoxLayout:
                                     MDTextField:
                                         id: set_odometr
                                         required: True
@@ -131,9 +131,7 @@
 
     MDScreen:
         name: 'settings_screen'
-        MDBoxLayout:
-            orientation: 'vertical'
-            padding: '20dp'
+        VerticalBoxLayout:
             MDTextField:
                 id: change_car_name_tf
                 required: True
@@ -142,9 +140,8 @@
             MDLabel:
                 text: 'What will tracking'
                 size_hint_y: .1
-            MDBoxLayout:
+            VerticalBoxLayout:
                 id: mybox
-                orientation: 'vertical'
                 size_hint_y: .1
             Widget:
             MDFillRoundFlatButton:
@@ -158,9 +155,7 @@
                     root.current = 'main_screen'
     MDScreen:
         name: 'add_item_screen'
-        MDBoxLayout:
-            orientation: 'vertical'
-            padding: '10dp'
+        VerticalBoxLayout:
             MDIcon:
                 id: tag_icon
             MDLabel:
@@ -200,7 +195,6 @@
                         root.transition = NoTransition()
                         root.current = 'main_screen'
                 MDFillRoundFlatButton:
-                    pos_hint: {'center_x': .5}
                     text: 'Ok'
                     on_press:
                         root.set_settings_data(root.ids.tag_label.text, int(root.ids.odometr.text))
@@ -211,9 +205,7 @@
 
     MDScreen:
         name: 'tag_screen'
-        MDBoxLayout:
-            orientation: 'vertical'
-            padding: '10dp'
+        VerticalBoxLayout:
             MDLabel:
                 size_hint_y: .1
                 text: 'Available tag'
@@ -224,3 +216,36 @@
                 on_press:
                     root.transition = NoTransition()
                     root.current = 'main_screen'
+
+    MDScreen:
+        name: 'delete_item_screen'
+        VerticalBoxLayout:
+            MDIcon:
+                id: for_del_sc_icon
+            MDLabel:
+                id: for_del_sc_tag_label
+                rowid: ''
+                text: ''
+                size_hint_y: .1
+            MDLabel:
+                id: for_del_sc_text
+                text: ''
+                multiline: True
+            Widget:
+            MDBoxLayout:
+                Widget:
+                MDFillRoundFlatButton:
+                    text: 'Delete'
+                    md_bg_color: "red"
+                    on_press:
+                        root.delete_item(root.ids.for_del_sc_tag_label.rowid)
+                        root.update_list()
+                        root.transition = NoTransition()
+                        root.current = 'main_screen'
+                Widget:
+                MDFillRoundFlatButton:
+                    text: 'Back'
+                    on_press:
+                        root.transition = NoTransition()
+                        root.current = 'main_screen'
+                Widget:
