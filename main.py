@@ -49,20 +49,36 @@ class MyRoot(MDScreenManager):
     def set_settings_data(key, value):
         data[key] = value
 
+    def update_last_change_item(self):
+        oil_db_record: list = sql.execute('SELECT * FROM myTable WHERE tag == ? ORDER BY date DESC', ('TO',)).fetchall()
+        if oil_db_record:
+            self.set_settings_data('TO', oil_db_record[0][3])
+        else:
+            print('value to not fined')
+        grm_db_record: list = sql.execute('SELECT * FROM myTable WHERE tag == ? ORDER BY date DESC', ('GRM',)).fetchall()
+        if grm_db_record:
+            self.set_settings_data('GRM', grm_db_record[0][3])
+        else:
+            print('value to not fined 1')
+        note_db_record: list = sql.execute('SELECT * FROM myTable WHERE tag == ? ORDER BY date DESC', ('Note',)).fetchall()
+        if note_db_record:
+            self.set_settings_data('Note', note_db_record[0][3])
+        else:
+            print('value to not fined 2')
+
     def calc_func(self, val):
         return
 
     def add_tracking_element(self):
         self.ids.mybox.add_widget(MDTextField(hint_text='What will tracking?'))
 
-    def mybox_build(self):
+    def settings_box_build(self):
         for i in range(len(data['tracking_elements'])):
-            self.ids.mybox.add_widget(MDLabel(text=data['tracking_elements'][i]))
+            self.ids.settings_box.add_widget(MDLabel(text=data['tracking_elements'][i]))
 
     def on_save(self, instance, value, date_range):
         """
         Events called when the "OK" dialog box button is clicked.
-
         :type instance: <kivymd.uix.picker.MDDatePicker object>;
         :param value: selected date;
         :type value: <class 'datetime.date'>;
@@ -89,7 +105,6 @@ class MyRoot(MDScreenManager):
             self.ids.tag_icon.icon = self.ids.comment.text = self.ids.price.text = self.ids.odometr.text = self.ids.mydate.text = self.ids.tag_label.text = ''
             sql.execute('INSERT INTO myTable VALUES(?, ?, ?, ?, ?, ?)', args)
             db.commit()
-            self.current = 'main_screen'
 
     def update_list(self):
         self.ids.container.clear_widgets()

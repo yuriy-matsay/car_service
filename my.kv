@@ -53,17 +53,14 @@
                                         pos_hint: {'center_x': .5}
                                         on_press:
                                             root.set_settings_data('current_odometr', int(root.ids.set_odometr.text))
-                                    MDLabel:
-                                        text: 'Last change'
-                                        size_hint_y: .1
-                                    MDBoxLayout:
-                                        #id: from_last_change_box
-                                        orientation: 'vertical'
-                                        size_hint_y: .1
-                                        MDLabel:
-                                            text: ''
-                                        MDLabel:
-
+                                            root.update_last_change_item()
+                                    MDScrollView:
+                                        MDList:
+                                            TwoLineRightIconListItem:
+                                                text: 'Last change oil'
+                                                secondary_text: ''
+                                                IconRightWidget:
+                                                    icon: 'oil'
                                     Widget:
                             Tab:
                                 title: 'Tab2'
@@ -117,7 +114,7 @@
                             nav_drawer.set_state('close')
                             root.current = 'settings_screen'
                             root.transition = NoTransition()
-                            root.mybox_build()
+                            root.settings_box_build()
                     DrawerClickableItem:
                         icon: 'tag'
                         text: 'Tags'
@@ -141,7 +138,7 @@
                 text: 'What will tracking'
                 size_hint_y: .1
             VerticalBoxLayout:
-                id: mybox
+                id: settings_box
                 size_hint_y: .1
             Widget:
             MDFillRoundFlatButton:
@@ -197,10 +194,10 @@
                 MDFillRoundFlatButton:
                     text: 'Ok'
                     on_press:
-                        root.set_settings_data(root.ids.tag_label.text, int(root.ids.odometr.text))
-                        root.transition = NoTransition()
                         root.save_to_bd(root.ids.tag_icon.icon, root.ids.comment.text, root.ids.price.text, root.ids.odometr.text, root.ids.mydate.text, root.ids.tag_label.text)
                         root.update_list()
+                        root.transition = NoTransition()
+                        root.current = 'main_screen'
                 Widget:
 
     MDScreen:
