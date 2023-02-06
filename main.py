@@ -52,19 +52,24 @@ class MyRoot(MDScreenManager):
     def update_last_change_item(self):
         oil_db_record: list = sql.execute('SELECT * FROM myTable WHERE tag == ? ORDER BY date DESC', ('TO',)).fetchall()
         if oil_db_record:
-            self.set_settings_data('TO', oil_db_record[0][3])
+            dif_oil_ch = int(data['current_odometr']) - int(oil_db_record[0][3])
+            self.ids.l_ch_oil.secondary_text = f'{dif_oil_ch} km ago'
         else:
-            print('value to not fined')
+            self.ids.l_ch_oil.secondary_text = 'not enough information'
+
         grm_db_record: list = sql.execute('SELECT * FROM myTable WHERE tag == ? ORDER BY date DESC', ('GRM',)).fetchall()
         if grm_db_record:
-            self.set_settings_data('GRM', grm_db_record[0][3])
+            dif_grm_ch = int(data['current_odometr']) - int(grm_db_record[0][3])
+            self.ids.l_ch_grm.secondary_text = f'{dif_grm_ch} km ago'
         else:
-            print('value to not fined 1')
+            self.ids.l_ch_grm.secondary_text = 'not enough information'
+
         note_db_record: list = sql.execute('SELECT * FROM myTable WHERE tag == ? ORDER BY date DESC', ('Note',)).fetchall()
         if note_db_record:
-            self.set_settings_data('Note', note_db_record[0][3])
+            dif_note_ch = int(data['current_odometr']) - int(note_db_record[0][3])
+            self.ids.l_ch_other.secondary_text = f'{dif_note_ch} km ago'
         else:
-            print('value to not fined 2')
+            self.ids.l_ch_other.secondary_text = 'not enough information'
 
     def calc_func(self, val):
         return
@@ -72,9 +77,6 @@ class MyRoot(MDScreenManager):
     def add_tracking_element(self):
         self.ids.mybox.add_widget(MDTextField(hint_text='What will tracking?'))
 
-    def settings_box_build(self):
-        for i in range(len(data['tracking_elements'])):
-            self.ids.settings_box.add_widget(MDLabel(text=data['tracking_elements'][i]))
 
     def on_save(self, instance, value, date_range):
         """
@@ -145,6 +147,7 @@ class MyApp(MDApp, MyRoot):
 
     def on_start(self):
         self.root.update_list()
+        self.root.update_last_change_item()
 
     def on_stop(self):
         with open('settings.json', 'w') as f:

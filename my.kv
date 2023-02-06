@@ -38,7 +38,9 @@
                             left_action_items: [['menu', lambda x: nav_drawer.set_state('open')]]
                         MDTabs:
                             indicator_color: 'white'
-                            on_tab_switch: root.update_list()
+                            on_tab_switch:
+                                root.update_list()
+                                root.update_last_change_item()
                             Tab:
                                 title: 'Tab1'
                                 VerticalBoxLayout:
@@ -57,11 +59,23 @@
                                     MDScrollView:
                                         MDList:
                                             TwoLineRightIconListItem:
+                                                id: l_ch_oil
                                                 text: 'Last change oil'
                                                 secondary_text: ''
                                                 IconRightWidget:
                                                     icon: 'oil'
-                                    Widget:
+                                            TwoLineRightIconListItem:
+                                                id: l_ch_other
+                                                text: 'Last change other'
+                                                secondary_text: ''
+                                                IconRightWidget:
+                                                    icon: 'note-text-outline'
+                                            TwoLineRightIconListItem:
+                                                id: l_ch_grm
+                                                text: 'Last change GRM'
+                                                secondary_text: ''
+                                                IconRightWidget:
+                                                    icon: 'car-cog'
                             Tab:
                                 title: 'Tab2'
                                 MDScrollView:
@@ -105,8 +119,6 @@
                         text: 'Header text'
                         spacing: '4dp'
                         padding: '12dp', 0, 0, '56dp'
-                    #MDNavigationDrawerLabel:
-                    #    text: 'Settings'
                     DrawerClickableItem:
                         icon: 'cog'
                         text: 'Settings'
@@ -114,7 +126,6 @@
                             nav_drawer.set_state('close')
                             root.current = 'settings_screen'
                             root.transition = NoTransition()
-                            root.settings_box_build()
                     DrawerClickableItem:
                         icon: 'tag'
                         text: 'Tags'
@@ -134,12 +145,6 @@
                 required: True
                 hint_text: 'Name of car'
                 text: root.return_settings_data('car_name')
-            MDLabel:
-                text: 'What will tracking'
-                size_hint_y: .1
-            VerticalBoxLayout:
-                id: settings_box
-                size_hint_y: .1
             Widget:
             MDFillRoundFlatButton:
                 pos_hint: {'center_x': .5}
