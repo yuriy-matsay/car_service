@@ -133,6 +133,12 @@
                             nav_drawer.set_state('close')
                             root.current = 'tag_screen'
                             root.transition = NoTransition()
+                    DrawerClickableItem:
+                        icon: 'file-download-outline'
+                        text: 'File manager'
+                        on_release:
+                            nav_drawer.set_state('close')
+                            app.file_manager_open()
                     MDNavigationDrawerDivider:
                     MDNavigationDrawerLabel:
                         text: 'Labels'

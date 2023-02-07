@@ -1,3 +1,4 @@
+import os
 from kivymd.app import MDApp
 from kivymd.uix.floatlayout import MDFloatLayout
 from kivymd.uix.tab import MDTabsBase
@@ -14,6 +15,7 @@ from kivymd.uix.label import MDLabel
 from kivymd.uix.list import ThreeLineRightIconListItem, IconRightWidget
 from kivymd.uix.floatlayout import MDFloatLayout
 from kivymd.uix.boxlayout import MDBoxLayout
+from kivymd.uix.filemanager import MDFileManager
 from kivy.properties import StringProperty
 from kivymd.uix.tab import MDTabsBase
 import sqlite3
@@ -80,6 +82,7 @@ class MyRoot(MDScreenManager):
             self.ids.l_ch_other.secondary_text = 'not enough information'
 
     def calc_func(self, val):
+
         return
 
     def add_tracking_element(self):
@@ -142,6 +145,42 @@ class MyRoot(MDScreenManager):
 
 
 class MyApp(MDApp, MyRoot):
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        Window.bind(on_keyboard=self.events)
+        self.manager_open = False
+        self.file_manager = MDFileManager(
+            exit_manager=self.exit_manager, select_path=self.select_path
+        )
+
+    def file_manager_open(self):
+        self.file_manager.show(os.path.expanduser("~"))  # output manager to the screen
+        self.manager_open = True
+
+    def select_path(self, path: str):
+        '''
+        It will be called when you click on the file name
+        or the catalog selection button.
+
+        :param path: path to the selected directory or file;
+        '''
+
+        os.popen(f'cp mydb.db {path}/mybb1.db')
+        self.exit_manager()
+
+    def exit_manager(self, *args):
+        '''Called when the user reaches the root of the directory tree.'''
+
+        self.manager_open = False
+        self.file_manager.close()
+
+    def events(self, instance, keyboard, keycode, text, modifiers):
+        '''Called when buttons are pressed on the mobile device.'''
+
+        if keyboard in (1001, 27):
+            if self.manager_open:
+                self.file_manager.back()
+
     def build(self):
         self.title = 'myapp'
         self.theme_cls.theme_style = "Dark"
