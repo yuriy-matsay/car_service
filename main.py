@@ -31,6 +31,7 @@ with sqlite3.connect('mydb.db') as db:
 class Tab(MDFloatLayout, MDTabsBase):
     pass
 
+
 class CustomThreeLineRightIconListItem(ThreeLineRightIconListItem):
     row_id = StringProperty()
     tag_icon = StringProperty()
@@ -39,6 +40,8 @@ class CustomThreeLineRightIconListItem(ThreeLineRightIconListItem):
     odometr = StringProperty()
     date = StringProperty()
     tag = StringProperty()
+
+
 class MyRoot(MDScreenManager):
 
     @staticmethod
@@ -48,6 +51,11 @@ class MyRoot(MDScreenManager):
     @staticmethod
     def set_settings_data(key, value):
         data[key] = value
+
+    @staticmethod
+    def delete_item(rowid):
+        sql.execute('DELETE FROM myTable WHERE rowid == ?', rowid)
+        db.commit()
 
     def update_last_change_item(self):
         oil_db_record: list = sql.execute('SELECT * FROM myTable WHERE tag == ? ORDER BY date DESC', ('TO',)).fetchall()
@@ -76,7 +84,6 @@ class MyRoot(MDScreenManager):
 
     def add_tracking_element(self):
         self.ids.mybox.add_widget(MDTextField(hint_text='What will tracking?'))
-
 
     def on_save(self, instance, value, date_range):
         """
@@ -132,10 +139,6 @@ class MyRoot(MDScreenManager):
         self.ids.for_del_sc_tag_label.text = instance.tag
         self.ids.for_del_sc_tag_label.rowid = instance.row_id
         self.ids.for_del_sc_text.text = f'{instance.date}\n{instance.comment}\n{instance.odometr} km\n{instance.price} UAH\n'
-
-    def delete_item(self, rowid):
-        sql.execute('DELETE FROM myTable WHERE rowid == ?', rowid)
-        db.commit()
 
 
 class MyApp(MDApp, MyRoot):
