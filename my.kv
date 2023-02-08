@@ -139,6 +139,12 @@
                         on_release:
                             nav_drawer.set_state('close')
                             app.file_manager_open()
+                    DrawerClickableItem:
+                        icon: 'head-plus'
+                        text: 'test'
+                        on_release:
+                            nav_drawer.set_state('close')
+                            root.test_func()
                     MDNavigationDrawerDivider:
                     MDNavigationDrawerLabel:
                         text: 'Labels'

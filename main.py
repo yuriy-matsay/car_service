@@ -1,23 +1,15 @@
 import os
 from kivymd.app import MDApp
-from kivymd.uix.floatlayout import MDFloatLayout
-from kivymd.uix.tab import MDTabsBase
 from kivy.core.window import Window
-from kivymd.uix.menu import MDDropdownMenu
 from kivymd.uix.screenmanager import MDScreenManager
 from kivymd.uix.pickers import MDDatePicker
-from kivy.uix.screenmanager import FadeTransition
-from kivymd.uix.button import MDFillRoundFlatButton
-from kivymd.uix.button import MDFlatButton
-from kivymd.uix.dialog import MDDialog
 from kivymd.uix.textfield import MDTextField
-from kivymd.uix.label import MDLabel
 from kivymd.uix.list import ThreeLineRightIconListItem, IconRightWidget
 from kivymd.uix.floatlayout import MDFloatLayout
-from kivymd.uix.boxlayout import MDBoxLayout
 from kivymd.uix.filemanager import MDFileManager
 from kivy.properties import StringProperty
 from kivymd.uix.tab import MDTabsBase
+from datetime import date as current_date
 import sqlite3
 import json
 
@@ -81,9 +73,11 @@ class MyRoot(MDScreenManager):
         else:
             self.ids.l_ch_other.secondary_text = 'not enough information'
 
-    def calc_func(self, val):
-
-        return
+    def test_func(self):
+        #tr = os.path.dirname(os.path.abspath('mydb.db'))
+        #tr = os.path.abspath(os.getcwd())
+        tr = os.path.realpath('mydb.db')
+        print(tr)
 
     def add_tracking_element(self):
         self.ids.mybox.add_widget(MDTextField(hint_text='What will tracking?'))
@@ -150,22 +144,26 @@ class MyApp(MDApp, MyRoot):
         Window.bind(on_keyboard=self.events)
         self.manager_open = False
         self.file_manager = MDFileManager(
-            exit_manager=self.exit_manager, select_path=self.select_path
+            exit_manager=self.exit_manager, select_path=self.select_path_export
         )
 
     def file_manager_open(self):
         self.file_manager.show(os.path.expanduser("~"))  # output manager to the screen
         self.manager_open = True
 
-    def select_path(self, path: str):
+    def select_path_import(self, path: str):
+        realpath = os.path.realpath('mydb.db')
+        os.popen(f'cp {path} {realpath}')
+        self.exit_manager()
+
+    def select_path_export(self, path: str):
         '''
         It will be called when you click on the file name
         or the catalog selection button.
-
         :param path: path to the selected directory or file;
         '''
 
-        os.popen(f'cp mydb.db {path}/mybb1.db')
+        os.popen(f'cp mydb.db {path}/mydb{current_date.today()}.db')
         self.exit_manager()
 
     def exit_manager(self, *args):
