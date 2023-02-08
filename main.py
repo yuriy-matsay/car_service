@@ -1,20 +1,17 @@
+import os
 from kivymd.app import MDApp
-from kivymd.uix.floatlayout import MDFloatLayout
-from kivymd.uix.tab import MDTabsBase
 from kivy.core.window import Window
-from kivymd.uix.menu import MDDropdownMenu
 from kivymd.uix.screenmanager import MDScreenManager
 from kivymd.uix.pickers import MDDatePicker
-from kivy.uix.screenmanager import FadeTransition
-from kivymd.uix.button import MDFillRoundFlatButton
-from kivymd.uix.button import MDFlatButton
-from kivymd.uix.dialog import MDDialog
 from kivymd.uix.textfield import MDTextField
-from kivymd.uix.label import MDLabel
-from kivymd.uix.list import ThreeLineListItem
+from kivymd.uix.list import ThreeLineRightIconListItem, IconRightWidget
 from kivymd.uix.floatlayout import MDFloatLayout
-from kivymd.uix.boxlayout import MDBoxLayout
+from kivymd.uix.filemanager import MDFileManager
+from kivy.properties import StringProperty
 from kivymd.uix.tab import MDTabsBase
+from datetime import date as current_date
+from plyer import filechooser
+from kivymd.toast import toast
 import sqlite3
 import json
 
@@ -31,6 +28,16 @@ class Tab(MDFloatLayout, MDTabsBase):
     pass
 
 
+class CustomThreeLineRightIconListItem(ThreeLineRightIconListItem):
+    row_id = StringProperty()
+    tag_icon = StringProperty()
+    comment = StringProperty()
+    price = StringProperty()
+    odometr = StringProperty()
+    date = StringProperty()
+    tag = StringProperty()
+
+
 class MyRoot(MDScreenManager):
 
     @staticmethod
@@ -41,21 +48,39 @@ class MyRoot(MDScreenManager):
     def set_settings_data(key, value):
         data[key] = value
 
-    def calc_func(self, val):
+    @staticmethod
+    def delete_item(rowid):
+        sql.execute('DELETE FROM myTable WHERE rowid == ?', rowid)
+        db.commit()
 
-        return
+    def update_last_change_item(self):
+        oil_db_record: list = sql.execute('SELECT * FROM myTable WHERE tag == ? ORDER BY date DESC', ('TO',)).fetchall()
+        if oil_db_record:
+            dif_oil_ch = int(data['current_odometr']) - int(oil_db_record[0][3])
+            self.ids.l_ch_oil.secondary_text = f'{dif_oil_ch} km ago'
+        else:
+            self.ids.l_ch_oil.secondary_text = 'not enough information'
+
+        grm_db_record: list = sql.execute('SELECT * FROM myTable WHERE tag == ? ORDER BY date DESC', ('GRM',)).fetchall()
+        if grm_db_record:
+            dif_grm_ch = int(data['current_odometr']) - int(grm_db_record[0][3])
+            self.ids.l_ch_grm.secondary_text = f'{dif_grm_ch} km ago'
+        else:
+            self.ids.l_ch_grm.secondary_text = 'not enough information'
+
+        note_db_record: list = sql.execute('SELECT * FROM myTable WHERE tag == ? ORDER BY date DESC', ('Note',)).fetchall()
+        if note_db_record:
+            dif_note_ch = int(data['current_odometr']) - int(note_db_record[0][3])
+            self.ids.l_ch_other.secondary_text = f'{dif_note_ch} km ago'
+        else:
+            self.ids.l_ch_other.secondary_text = 'not enough information'
 
     def add_tracking_element(self):
         self.ids.mybox.add_widget(MDTextField(hint_text='What will tracking?'))
 
-    def mybox_build(self):
-        for i in range(len(data['tracking_elements'])):
-            self.ids.mybox.add_widget(MDLabel(text=data['tracking_elements'][i]))
-
     def on_save(self, instance, value, date_range):
         """
         Events called when the "OK" dialog box button is clicked.
-
         :type instance: <kivymd.uix.picker.MDDatePicker object>;
         :param value: selected date;
         :type value: <class 'datetime.date'>;
@@ -65,7 +90,7 @@ class MyRoot(MDScreenManager):
         value = str(value)
         val: str = value.replace('-', '/')
         self.ids.mydate.text = val
-##
+
     def on_cancel(self, instance, value):
         """Events called when the "CANCEL" dialog box button is clicked."""
         pass
@@ -79,27 +104,77 @@ class MyRoot(MDScreenManager):
         if '' in args:
             pass
         else:
-            self.ids.job.text = self.ids.comment.text = self.ids.price.text = self.ids.odometr.text = self.ids.mydate.text = self.ids.tag_label.text = ''
+            self.ids.tag_icon.icon = self.ids.comment.text = self.ids.price.text = self.ids.odometr.text = self.ids.mydate.text = self.ids.tag_label.text = ''
             sql.execute('INSERT INTO myTable VALUES(?, ?, ?, ?, ?, ?)', args)
             db.commit()
-            x = sql.execute('SELECT * FROM myTable').fetchall()
-            self.current = 's1'
 
     def update_list(self):
         self.ids.container.clear_widgets()
-        x = sql.execute('SELECT * FROM myTable ORDER BY date').fetchall()
-        for i in range(len(x)):
-            self.ids.container.add_widget(ThreeLineListItem(text=f'{x[i][4]}',
-                                                            secondary_text=f'{x[i][0]}',
-                                                            tertiary_text=f'{x[i][3]}',
-                                                            on_release=lambda _: self.yyy()
-                                                            ))
+        db_record: list = sql.execute('SELECT rowid, * FROM myTable ORDER BY date DESC').fetchall()
+        for i in range(len(db_record)):
+            list_item = CustomThreeLineRightIconListItem(
+                    text=f'{db_record[i][5]}',
+                    secondary_text=f'{db_record[i][2]}',
+                    tertiary_text=f'{db_record[i][4]}',
+                    row_id=f'{db_record[i][0]}',
+                    tag_icon=f'{db_record[i][1]}',
+                    comment=f'{db_record[i][2]}',
+                    price=f'{db_record[i][3]}',
+                    odometr=f'{db_record[i][4]}',
+                    date=f'{db_record[i][5]}',
+                    tag=f'{db_record[i][6]}',
+                    )
+            list_item.add_widget(IconRightWidget(icon=db_record[i][1]))
+            self.ids.container.add_widget(list_item)
 
-    def yyy(self):
-        print('gg')
+    def show_item(self, instance):
+        self.ids.for_del_sc_icon.icon = instance.tag_icon
+        self.ids.for_del_sc_tag_label.text = instance.tag
+        self.ids.for_del_sc_tag_label.rowid = instance.row_id
+        self.ids.for_del_sc_text.text = f'{instance.date}\n{instance.comment}\n{instance.odometr} km\n{instance.price} UAH\n'
 
 
 class MyApp(MDApp, MyRoot):
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        Window.bind(on_keyboard=self.events)
+        self.manager_open = False
+        self.file_manager = MDFileManager(
+            exit_manager=self.exit_manager, select_path=self.select_path_export
+        )
+
+    def file_manager_open(self):
+        self.file_manager.show(os.path.expanduser("~"))  # output manager to the screen
+        self.manager_open = True
+
+    def select_file_path_import(self):
+        filepath = filechooser.open_file()[0]
+        realpath = os.path.realpath('mydb.db')
+        os.popen(f'cp {filepath} {realpath}')
+
+    def select_path_export(self, path: str):
+        '''
+        It will be called when you click on the file name
+        or the catalog selection button.
+        :param path: path to the selected directory or file;
+        '''
+
+        os.popen(f'cp mydb.db {path}/mydb{current_date.today()}.db')
+        self.exit_manager()
+
+    def exit_manager(self, *args):
+        '''Called when the user reaches the root of the directory tree.'''
+
+        self.manager_open = False
+        self.file_manager.close()
+
+    def events(self, instance, keyboard, keycode, text, modifiers):
+        '''Called when buttons are pressed on the mobile device.'''
+
+        if keyboard in (1001, 27):
+            if self.manager_open:
+                self.file_manager.back()
+
     def build(self):
         self.title = 'myapp'
         self.theme_cls.theme_style = "Dark"
@@ -108,6 +183,7 @@ class MyApp(MDApp, MyRoot):
 
     def on_start(self):
         self.root.update_list()
+        self.root.update_last_change_item()
 
     def on_stop(self):
         with open('settings.json', 'w') as f:
