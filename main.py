@@ -11,18 +11,14 @@ from kivy.properties import StringProperty
 from kivymd.uix.tab import MDTabsBase
 from datetime import date as current_date
 from plyer import filechooser
-from kivymd.toast import toast
 import sqlite3
 import json
 
 Window.size = 400, 700
 
-with open('settings.json', 'r') as s_d:
-    data = json.load(s_d)
 
 with sqlite3.connect('mydb.db') as db:
     sql = db.cursor()
-
 
 class Tab(MDFloatLayout, MDTabsBase):
     pass
@@ -42,11 +38,13 @@ class MyRoot(MDScreenManager):
 
     @staticmethod
     def return_settings_data(key):
-        return data[key]
+        val1 = sql.execute(f'SELECT {key} FROM settings').fetchone()
+        return val1[0]
 
     @staticmethod
     def set_settings_data(key, value):
-        data[key] = value
+        sql.execute(f'UPDATE settings SET {key} == ? WHERE rowid == ?', (value, '1'))
+        db.commit()
 
     @staticmethod
     def delete_item(rowid):
