@@ -42,7 +42,7 @@
                                 root.update_list()
                                 root.update_last_change_item()
                             Tab:
-                                title: 'Tab1'
+                                title: 'Current'
                                 VerticalBoxLayout:
                                     MDTextField:
                                         id: set_odometr
@@ -77,7 +77,7 @@
                                                 IconRightWidget:
                                                     icon: 'car-cog'
                             Tab:
-                                title: 'Tab2'
+                                title: 'All'
                                 MDScrollView:
                                     MDList:
                                         id: container
@@ -107,7 +107,6 @@
                                     root.current = 'add_item_screen'
                                     root.ids.tag_icon.icon = 'note-text-outline'
                                     root.ids.tag_label.text = self.text
-
                             Widget:
 
             MDNavigationDrawer:
@@ -115,8 +114,8 @@
                 radius: (0, 16, 16, 0)
                 MDNavigationDrawerMenu:
                     MDNavigationDrawerHeader:
-                        title: 'Header title'
-                        text: 'Header text'
+                        title: 'Car service'
+                        text: root.return_settings_data('car_name')
                         spacing: '4dp'
                         padding: '12dp', 0, 0, '56dp'
                     DrawerClickableItem:
@@ -127,27 +126,18 @@
                             root.current = 'settings_screen'
                             root.transition = NoTransition()
                     DrawerClickableItem:
-                        icon: 'tag'
-                        text: 'Tags'
-                        on_press:
-                            nav_drawer.set_state('close')
-                            root.current = 'tag_screen'
-                            root.transition = NoTransition()
-                    DrawerClickableItem:
-                        icon: 'file-download-outline'
-                        text: 'File manager'
+                        icon: 'folder-upload-outline'
+                        text: 'Export'
                         on_release:
                             nav_drawer.set_state('close')
                             app.file_manager_open()
                     DrawerClickableItem:
-                        icon: 'head-plus'
-                        text: 'test'
+                        icon: 'file-download-outline'
+                        text: 'Import'
                         on_release:
                             nav_drawer.set_state('close')
-                            root.test_func()
+                            app.select_file_path_import()
                     MDNavigationDrawerDivider:
-                    MDNavigationDrawerLabel:
-                        text: 'Labels'
 
     MDScreen:
         name: 'settings_screen'
@@ -216,20 +206,6 @@
                         root.transition = NoTransition()
                         root.current = 'main_screen'
                 Widget:
-
-    MDScreen:
-        name: 'tag_screen'
-        VerticalBoxLayout:
-            MDLabel:
-                size_hint_y: .1
-                text: 'Available tag'
-            Widget:
-            MDFillRoundFlatButton:
-                pos_hint: {'center_x': .5}
-                text: 'Ok'
-                on_press:
-                    root.transition = NoTransition()
-                    root.current = 'main_screen'
 
     MDScreen:
         name: 'delete_item_screen'

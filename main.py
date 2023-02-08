@@ -10,6 +10,8 @@ from kivymd.uix.filemanager import MDFileManager
 from kivy.properties import StringProperty
 from kivymd.uix.tab import MDTabsBase
 from datetime import date as current_date
+from plyer import filechooser
+from kivymd.toast import toast
 import sqlite3
 import json
 
@@ -72,12 +74,6 @@ class MyRoot(MDScreenManager):
             self.ids.l_ch_other.secondary_text = f'{dif_note_ch} km ago'
         else:
             self.ids.l_ch_other.secondary_text = 'not enough information'
-
-    def test_func(self):
-        #tr = os.path.dirname(os.path.abspath('mydb.db'))
-        #tr = os.path.abspath(os.getcwd())
-        tr = os.path.realpath('mydb.db')
-        print(tr)
 
     def add_tracking_element(self):
         self.ids.mybox.add_widget(MDTextField(hint_text='What will tracking?'))
@@ -151,10 +147,10 @@ class MyApp(MDApp, MyRoot):
         self.file_manager.show(os.path.expanduser("~"))  # output manager to the screen
         self.manager_open = True
 
-    def select_path_import(self, path: str):
+    def select_file_path_import(self):
+        filepath = filechooser.open_file()[0]
         realpath = os.path.realpath('mydb.db')
-        os.popen(f'cp {path} {realpath}')
-        self.exit_manager()
+        os.popen(f'cp {filepath} {realpath}')
 
     def select_path_export(self, path: str):
         '''
